@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require_relative '../lib/war_paint'
+puts Hello::hello_world
