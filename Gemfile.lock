@@ -1,0 +1,24 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    curses (1.4.4)
+    minitest (5.18.0)
+    rake (13.0.6)
+    webrick (1.7.0)
+    yard (0.9.28)
+      webrick (~> 1.7.0)
+
+PLATFORMS
+  arm64-darwin-22
+
+DEPENDENCIES
+  curses
+  minitest
+  rake
+  yard
+
+RUBY VERSION
+   ruby 3.2.1p31
+
+BUNDLED WITH
+   2.4.8
