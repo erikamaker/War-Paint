@@ -1,7 +1,19 @@
 #!/usr/bin/env ruby
 
 require_relative '../lib/war_paint'
+require 'optparse'
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: war_paint [options]"
+
+  opts.on("-c", "--curses", "Use the curses renderer") do
+    options[:renderer] = CursesRenderer
+  end
+end.parse!
+
+renderer_class = options[:renderer] || TerminalRenderer
 
 board = Board.new(5,4)
-renderer = TerminalRenderer.new(board)
+renderer = renderer_class.new(board)
 renderer.play!
