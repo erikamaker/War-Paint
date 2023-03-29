@@ -19,9 +19,11 @@ class Board
 end
 
 
+board = Board.new(5,4)
+renderer = Curses.new
+
+
 loop do 
-  board = Board.new(5,4)
-  renderer = Curses.new
   renderer.display(board.grid(renderer.empty_square))      # Curses instance creates a grid of the preset for empty squares, defined in Curses. 
   print "Select `Q` to Quit  >>  "                         # Prompt for...
   input = gets.chomp.downcase                              # ... and accept input.
