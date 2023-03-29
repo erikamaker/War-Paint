@@ -5,18 +5,31 @@ class TerminalRenderer
 
   def play!
     loop do
-      display(@board.grid(empty_square))      # Curses instance creates a grid of the preset for empty squares, defined in Curses.
-      print "Select `Q` to Quit  >>  "                         # Prompt for...
-      input = gets.chomp.downcase                              # ... and accept input.
-      break if input == 'q'                                    # Exit program.
+      display
+      print "Select `Q` to Quit  >>  "
+      input = gets.chomp.downcase
+      break if input == 'q'
     end
   end
 
-  def display(squares)
-    squares.each {|row| puts row.join}                     # For each element in coords, join as a string and output it with a new line.
+  def display
+    for row in @board.grid
+      for cell in row
+        if cell.empty?
+          print empty_square
+        else
+          print filled_square
+        end
+      end
+      print "\n"
+    end
   end
 
   def empty_square
     "⬚ "
+  end
+
+  def filled_square
+    "█ "
   end
 end
