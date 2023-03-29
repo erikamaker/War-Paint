@@ -2,21 +2,8 @@
 
 require_relative '../lib/war_paint'
 
-class Curses
-  def display(squares)
-    squares.each {|row| puts row.join}                     # For each element in coords, join as a string and output it with a new line.
-  end
-  def empty_square
-    "⬚ "
-  end
-end
-
-
-
-
 board = Board.new(5,4)
-renderer = Curses.new
-
+renderer = TerminalRenderer.new
 
 loop do
   renderer.display(board.grid(renderer.empty_square))      # Curses instance creates a grid of the preset for empty squares, defined in Curses.
