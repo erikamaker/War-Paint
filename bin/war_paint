@@ -4,16 +4,29 @@ require_relative '../lib/war_paint'
 require 'optparse'
 
 options = {}
+default_rows = 5
+default_cols = 5
+
 OptionParser.new do |opts|
   opts.banner = "Usage: war_paint [options]"
 
-  opts.on("-c", "--curses", "Use the curses renderer") do
+  opts.on("-x", "--curses", "Use the curses renderer") do
     options[:renderer] = CursesRenderer
+  end
+
+  opts.on("-r ROWS", "--rows ROWS", Integer, "Number of rows (default: #{default_rows})") do |rows|
+    options[:rows] = rows
+  end
+
+  opts.on("-c COLS", "--cols COLS", Integer, "Number of columns (default: #{default_cols})") do |cols|
+    options[:cols] = cols
   end
 end.parse!
 
 renderer_class = options[:renderer] || TerminalRenderer
+rows = options[:rows] || default_rows
+cols = options[:cols] || default_cols
 
-board = Board.new(5,4)
+board = Board.new(rows, cols)
 renderer = renderer_class.new(board)
 renderer.play!
