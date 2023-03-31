@@ -1,4 +1,7 @@
 #!/usr/bin/env ruby
 
 require_relative '../lib/war_paint'
-puts Hello::hello_world
+
+board = Board.new(5,4)
+renderer = TerminalRenderer.new(board)
+renderer.play!
