@@ -6,7 +6,9 @@ class TerminalRenderer
   def play!
     loop do
       display
-      print "Select `Q` to Quit  >>  "
+      print "Select `Q` to Quit
+      
+      >>  "
       input = gets.chomp.downcase
       break if input == 'q'
     end
