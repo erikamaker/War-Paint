@@ -32,18 +32,7 @@ OptionParser.new do |opts|                         # Creates a new OpertionParse
   end
 end.parse!                                         # The end keyword chains parse! because it's a Ruby pattern for blocks that accept arguments. It parses the command line arguments. 
 
-renderer_class = options[:renderer] || TerminalRenderer
-rows = options[:rows] || default_rows
-cols = options[:cols] || default_cols
 
-board = Board.new(rows, cols)
-renderer = renderer_class.new(board)
-renderer.play!
-
-
-
-
-=begin
 renderer_class = options[:renderer] || CursesRenderer
 rows = options[:rows] || default_rows
 cols = options[:cols] || default_cols
@@ -51,5 +40,5 @@ cols = options[:cols] || default_cols
 board = Board.new(rows, cols)
 renderer = renderer_class.new(board)
 renderer.play!
-=end
+
 
