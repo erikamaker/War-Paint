@@ -4,11 +4,11 @@ require 'curses'
 
 class CursesRenderer
   MOVEMENT_KEYS = [Curses::Key::UP, Curses::Key::DOWN, Curses::Key::LEFT, Curses::Key::RIGHT].freeze
-  PAINT_KEYS = [Curses::Key::Enter, ' ', "\n"]
+  PAINT_KEYS = [Curses::Key::ENTER, ' ', "\n"]
   UNPAINTED = 1
-  Curses.init_pair(PAINTED, Curses::COLOR_WHITE, Curses::COLOR_BLACK)
+  Curses.init_pair(UNPAINTED, Curses::COLOR_WHITE, Curses::COLOR_BLACK)
   PAINTED = 2
-  Curses.init_pair(UNPAINTED, Curses::COLOR_WHITE, Curses::COLOR_RED)
+  Curses.init_pair(PAINTED, Curses::COLOR_WHITE, Curses::COLOR_RED)
 
 
   def initialize(board)
