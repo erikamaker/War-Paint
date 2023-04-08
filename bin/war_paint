@@ -1,27 +1,25 @@
 #!/usr/bin/env ruby
 
-# The shebang above tells the OS that this is a script and to use Ruby. 
+require_relative '../lib/war_paint'
+require 'optparse'
 
-require_relative '../lib/war_paint'     # Requires the war_paint file.
-require 'optparse'                      # Requires the optparse library for command-line option parsing.
-
-options = {}                            # These lines set up default values and define an OptionParser object.
+options = {}
 
 default_rows = 5
 default_cols = 5
 
-OptionParser.new do |opts|                         # Creates a new OpertionParser object with a block argument for `opts`      
-  opts.banner = "Usage: war_paint [options]"       # This part is only really useful if I'm using the --help flag in the terminal 
+OptionParser.new do |opts|
+  opts.banner = "Usage: war_paint [options]"
 
 
-  opts.on("-r ROWS", "--rows ROWS", Integer, "Number of rows (default: #{default_rows})") do |rows|    # Command line options for rows that must be a number type 
-    options[:rows] = rows                                    # Sets the :rows key in the options hash to the rows provided.                                 
+  opts.on("-r ROWS", "--rows ROWS", Integer, "Number of rows (default: #{default_rows})") do |rows|
+    options[:rows] = rows
   end
 
-  opts.on("-c COLS", "--cols COLS", Integer, "Number of columns (default: #{default_cols})") do |cols| # Command line options for columns that must be a number type 
-    options[:cols] = cols                                    # Sets the :cols key in the options hash to the cols provided. 
+  opts.on("-c COLS", "--cols COLS", Integer, "Number of columns (default: #{default_cols})") do |cols|
+    options[:cols] = cols
   end
-end.parse!                                         # The end keyword chains parse! because it's a Ruby pattern for blocks that accept arguments. It parses the command line arguments. 
+end.parse!
 
 rows = options[:rows] || default_rows
 cols = options[:cols] || default_cols
