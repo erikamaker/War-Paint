@@ -25,8 +25,10 @@ class CursesRenderer
       if key == 'q' || key == 'Q'
 
         break
-      elsif movement?(key) || painting?(key)
+      elsif movement?(key)
         update_selection(key)
+      elsif painting?(key)
+        @board.paint!(@selected[0], @selected[1])
       end
     end
 
@@ -93,7 +95,6 @@ class CursesRenderer
       @selected[1] -= 1 if @selected[1] > 0
     when Curses::Key::RIGHT
       @selected[1] += 1 if @selected[1] < @board.width - 1
-    when *PAINT_KEYS
     end
   end
 

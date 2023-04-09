@@ -13,6 +13,9 @@ class Board
     @grid.first.length
   end
 
+  def paint!(row, col)
+    @grid[row][col].paint!
+  end
 end
 
 
