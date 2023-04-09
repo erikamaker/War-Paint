@@ -34,6 +34,12 @@ class CursesRenderer
   end
 
   def render
+    draw_board
+    draw_instructions
+    @screen.refresh
+  end
+
+  def draw_board
     @board.grid.each_with_index do |row, row_index|
       row.each_with_index do |cell, column_index|
         box = selected?(row_index, column_index) ? selected_box : unselected_box
@@ -44,13 +50,13 @@ class CursesRenderer
         @screen.addstr box[1]
       end
     end
+  end
 
+  def draw_instructions
     @screen.setpos @board.height * CELL_HEIGHT + 1, 0
     @screen.addstr "Selected: #{@selected}"
     @screen.setpos @board.height * CELL_HEIGHT + 2, 0
     @screen.addstr "Use arrow keys to select or `Q` to quit"
-
-    @screen.refresh
   end
 
   def selected?(row, col)
