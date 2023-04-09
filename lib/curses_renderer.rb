@@ -44,18 +44,21 @@ class CursesRenderer
   def draw_board
     @board.grid.each_with_index do |row, row_index|
       row.each_with_index do |cell, column_index|
-        draw_cell(row_index, column_index)
+        draw_cell(cell, row_index, column_index)
       end
     end
   end
 
-  def draw_cell(row, col)
+  def draw_cell(cell, row, col)
     box = selected?(row, col) ? selected_box : unselected_box
+    color = cell.painted? ? PAINTED_COLOR : UNPAINTED_COLOR
 
+    @screen.attron(Curses.color_pair(color))
     @screen.setpos(row * CELL_HEIGHT, col * CELL_WIDTH)
     @screen.addstr box[0]
     @screen.setpos(row * CELL_HEIGHT + 1, col * CELL_WIDTH)
     @screen.addstr box[1]
+    @screen.attroff(Curses.color_pair(color))
   end
 
   def draw_instructions
