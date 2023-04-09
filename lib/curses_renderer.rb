@@ -5,8 +5,8 @@ require 'curses'
 class CursesRenderer
   MOVEMENT_KEYS = [Curses::Key::UP, Curses::Key::DOWN, Curses::Key::LEFT, Curses::Key::RIGHT].freeze
   PAINT_KEYS = [Curses::Key::ENTER, ' ', "\n"]
-  UNPAINTED = 1
-  PAINTED = 2
+  UNPAINTED_COLOR = 1
+  PAINTED_COLOR = 2
 
   def initialize(board)
     @board = board
@@ -95,8 +95,8 @@ class CursesRenderer
     Curses.curs_set 0
     Curses.noecho
     Curses.start_color
-    Curses.init_pair(UNPAINTED, Curses::COLOR_WHITE, Curses::COLOR_BLACK)
-    Curses.init_pair(PAINTED, Curses::COLOR_WHITE, Curses::COLOR_RED)
+    Curses.init_pair(UNPAINTED_COLOR, Curses::COLOR_WHITE, Curses::COLOR_BLACK)
+    Curses.init_pair(PAINTED_COLOR, Curses::COLOR_WHITE, Curses::COLOR_RED)
 
     @screen = Curses.stdscr
     @screen.keypad = true
