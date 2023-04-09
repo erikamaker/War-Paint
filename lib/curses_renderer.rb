@@ -95,17 +95,17 @@ class CursesRenderer
   end
 
   def initialize_curses
-    Curses.init_screen                                        # Initialize curses screen.
-    Curses.curs_set 0                                         # Turn off the cursor, so it doesn't blink.
-    Curses.noecho                                             # Turns off echo, so player input isn't always returned in the terminal
-    Curses.start_color                                        # Allow for colorizing of output.
+    Curses.init_screen
+    Curses.curs_set 0
+    Curses.noecho
+    Curses.start_color
 
-    @screen = Curses.stdscr                                   # Sets @screen to the standard Curses screen (all output goes here).
-    @screen.keypad = true                                     # Allows special keys like arrow keys to work.
-    @screen.clear                                             # Clears the old screen before rendering the new one.
+    @screen = Curses.stdscr
+    @screen.keypad = true
+    @screen.clear
   end
 
-  def deinitialize_curses                                     # Exits Curses and returns the terminal to normal operating mode.
+  def deinitialize_curses
     Curses.close_screen
   end
 end
