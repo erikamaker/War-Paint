@@ -7,6 +7,8 @@ class CursesRenderer
   PAINT_KEYS = [Curses::Key::ENTER, ' ', "\n"]
   UNPAINTED_COLOR = 1
   PAINTED_COLOR = 2
+  CELL_HEIGHT = 2
+  CELL_WIDTH = 4
 
   def initialize(board)
     @board = board
@@ -32,25 +34,20 @@ class CursesRenderer
   end
 
   def render
-    cell_height = 2
-    cell_width = 4
-
     @board.grid.each_with_index do |row, row_index|
       row.each_with_index do |cell, column_index|
         box = selected?(row_index, column_index) ? selected_box : unselected_box
 
-        @screen.setpos(row_index * cell_height, column_index * cell_width)
+        @screen.setpos(row_index * CELL_HEIGHT, column_index * CELL_WIDTH)
         @screen.addstr box[0]
-        @screen.setpos(row_index * cell_height + 1, column_index * cell_width)
+        @screen.setpos(row_index * CELL_HEIGHT + 1, column_index * CELL_WIDTH)
         @screen.addstr box[1]
-
-
       end
     end
 
-    @screen.setpos @board.height * cell_height + 1, 0
+    @screen.setpos @board.height * CELL_HEIGHT + 1, 0
     @screen.addstr "Selected: #{@selected}"
-    @screen.setpos @board.height * cell_height + 2, 0
+    @screen.setpos @board.height * CELL_HEIGHT + 2, 0
     @screen.addstr "Use arrow keys to select or `Q` to quit"
 
     @screen.refresh
