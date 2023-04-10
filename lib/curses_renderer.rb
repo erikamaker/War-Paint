@@ -5,17 +5,15 @@ require 'curses'
 class CursesRenderer
   MOVEMENT_KEYS = [Curses::Key::UP, Curses::Key::DOWN, Curses::Key::LEFT, Curses::Key::RIGHT].freeze
   PAINT_KEYS = [Curses::Key::ENTER, ' ', "\n"]
-  UNPAINTED = 1
-  Curses.init_pair(UNPAINTED, Curses::COLOR_WHITE, Curses::COLOR_BLACK)
-  PAINTED = 2
-  Curses.init_pair(PAINTED, Curses::COLOR_WHITE, Curses::COLOR_RED)
-
+  UNPAINTED_COLOR = 1
+  PAINTED_COLOR = 2
+  CELL_HEIGHT = 2
+  CELL_WIDTH = 4
 
   def initialize(board)
     @board = board
     @selected = [0, 0]
   end
-
 
   def play!
     initialize_curses
@@ -27,8 +25,10 @@ class CursesRenderer
       if key == 'q' || key == 'Q'
 
         break
-      elsif movement?(key) || painting?(key)
+      elsif movement?(key)
         update_selection(key)
+      elsif painting?(key)
+        @board.paint!(@selected[0], @selected[1])
       end
     end
 
@@ -36,28 +36,36 @@ class CursesRenderer
   end
 
   def render
-    cell_height = 2
-    cell_width = 4
+    draw_board
+    draw_instructions
+    @screen.refresh
+  end
 
+  def draw_board
     @board.grid.each_with_index do |row, row_index|
       row.each_with_index do |cell, column_index|
-        box = selected?(row_index, column_index) ? selected_box : unselected_box
-
-        @screen.setpos(row_index * cell_height, column_index * cell_width)
-        @screen.addstr box[0]
-        @screen.setpos(row_index * cell_height + 1, column_index * cell_width)
-        @screen.addstr box[1]
-
-
+        draw_cell(cell, row_index, column_index)
       end
     end
+  end
 
-    @screen.setpos @board.height * cell_height + 1, 0
+  def draw_cell(cell, row, col)
+    box = selected?(row, col) ? selected_box : unselected_box
+    color = cell.painted? ? PAINTED_COLOR : UNPAINTED_COLOR
+
+    @screen.attron(Curses.color_pair(color))
+    @screen.setpos(row * CELL_HEIGHT, col * CELL_WIDTH)
+    @screen.addstr box[0]
+    @screen.setpos(row * CELL_HEIGHT + 1, col * CELL_WIDTH)
+    @screen.addstr box[1]
+    @screen.attroff(Curses.color_pair(color))
+  end
+
+  def draw_instructions
+    @screen.setpos @board.height * CELL_HEIGHT + 1, 0
     @screen.addstr "Selected: #{@selected}"
-    @screen.setpos @board.height * cell_height + 2, 0
+    @screen.setpos @board.height * CELL_HEIGHT + 2, 0
     @screen.addstr "Use arrow keys to select or `Q` to quit"
-
-    @screen.refresh
   end
 
   def selected?(row, col)
@@ -90,22 +98,23 @@ class CursesRenderer
       @selected[1] -= 1 if @selected[1] > 0
     when Curses::Key::RIGHT
       @selected[1] += 1 if @selected[1] < @board.width - 1
-    when *PAINT_KEYS
     end
   end
 
   def initialize_curses
-    Curses.init_screen                                        # Initialize curses screen.
-    Curses.curs_set 0                                         # Turn off the cursor, so it doesn't blink.
-    Curses.noecho                                             # Turns off echo, so player input isn't always returned in the terminal
-    Curses.start_color                                        # Allow for colorizing of output.
+    Curses.init_screen
+    Curses.curs_set 0
+    Curses.noecho
+    Curses.start_color
+    Curses.init_pair(UNPAINTED_COLOR, Curses::COLOR_WHITE, Curses::COLOR_BLACK)
+    Curses.init_pair(PAINTED_COLOR, Curses::COLOR_WHITE, Curses::COLOR_RED)
 
-    @screen = Curses.stdscr                                   # Sets @screen to the standard Curses screen (all output goes here).
-    @screen.keypad = true                                     # Allows special keys like arrow keys to work.
-    @screen.clear                                             # Clears the old screen before rendering the new one.
+    @screen = Curses.stdscr
+    @screen.keypad = true
+    @screen.clear
   end
 
-  def deinitialize_curses                                     # Exits Curses and returns the terminal to normal operating mode.
+  def deinitialize_curses
     Curses.close_screen
   end
 end
