@@ -10,4 +10,5 @@ class Cell
   def paint!
     @painted = true
   end
+
 end

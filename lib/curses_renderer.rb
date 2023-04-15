@@ -15,6 +15,7 @@ class CursesRenderer
     @selected = [0, 0]
   end
 
+
   def play!
     initialize_curses
 
@@ -30,6 +31,12 @@ class CursesRenderer
       elsif painting?(key)
         @board.paint!(@selected[0], @selected[1])
       end
+      if @board.game_over?
+        Curses.addstr("\n\nGAME OVER!\n\n")
+        Curses.refresh
+        sleep(3)
+        break
+      end
     end
 
     deinitialize_curses
@@ -40,6 +47,7 @@ class CursesRenderer
     draw_instructions
     @screen.refresh
   end
+
 
   def draw_board
     @board.grid.each_with_index do |row, row_index|
