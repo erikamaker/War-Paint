@@ -21,7 +21,12 @@ class CursesRenderer
 
     loop do
       render
-
+      if @board.game_over?
+        Curses.addstr("\n\nGAME OVER!\n\n")
+        Curses.refresh
+        sleep(3)
+        break
+      end
       key = @screen.getch
       if key == 'q' || key == 'Q'
 
@@ -30,12 +35,6 @@ class CursesRenderer
         update_selection(key)
       elsif painting?(key)
         @board.paint!(@selected[0], @selected[1])
-      end
-      if @board.game_over?
-        Curses.addstr("\n\nGAME OVER!\n\n")
-        Curses.refresh
-        sleep(3)
-        break
       end
     end
 
