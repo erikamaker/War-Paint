@@ -16,4 +16,9 @@ class Board
   def paint!(row, col)
     @grid[row][col].paint!
   end
+
+  def game_over?
+    @grid.flatten.all? { |cell| cell.painted? }
+  end
+
 end
