@@ -15,18 +15,23 @@ class CursesRenderer
     @selected = [0, 0]
   end
 
+  def show_game_over_screen
+    Curses.addstr("\n\nGAME OVER!\n\n")
+    Curses.refresh
+    sleep(3)
+  end
 
   def play!
     initialize_curses
 
     loop do
       render
+
       if @board.game_over?
-        Curses.addstr("\n\nGAME OVER!\n\n")
-        Curses.refresh
-        sleep(3)
+        show_game_over_screen
         break
       end
+
       key = @screen.getch
       if key == 'q' || key == 'Q'
 
