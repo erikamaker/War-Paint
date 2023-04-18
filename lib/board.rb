@@ -18,7 +18,7 @@ class Board
   end
 
   def game_over?
-    @grid.flatten.all? { |cell| cell.painted? }
+    @grid.flatten.all?(&:painted?)
   end
 
 end
