@@ -13,6 +13,7 @@ class CursesRenderer
   def initialize(board)
     @board = board
     @selected = [0, 0]
+    @cpu_player = Cpu.new(board)
   end
 
   def show_game_over_screen
@@ -40,6 +41,7 @@ class CursesRenderer
         update_selection(key)
       elsif painting?(key)
         @board.paint!(@selected[0], @selected[1])
+        @cpu_player.cpus_turn
       end
     end
 
