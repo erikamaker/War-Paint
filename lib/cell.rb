@@ -1,14 +1,15 @@
 class Cell
+  attr_accessor :painted_by
+
   def initialize
-    @painted = false
+    @painted_by = nil
   end
 
   def painted?
-    @painted == true
+    !!@painted_by
   end
 
-  def paint!
-    @painted = true
+  def paint!(player)
+    @painted_by = player
   end
-
 end
