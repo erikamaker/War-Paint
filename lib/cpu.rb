@@ -7,6 +7,7 @@ class Cpu
             row.each_with_index do |cell, column_index|
                 if !cell.painted?
                     @board.paint!(row_index,column_index)
+                    @board.agent_is_cpu
                     return
                 end
             end

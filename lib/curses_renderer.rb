@@ -41,7 +41,10 @@ class CursesRenderer
         update_selection(key)
       elsif painting?(key)
         @board.paint!(@selected[0], @selected[1])
+        @board.whose_turn_is_it?
+
         @cpu_player.cpus_turn
+        @board.whose_turn_is_it?
       end
     end
 
