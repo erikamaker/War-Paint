@@ -1,9 +1,10 @@
 class Board
   attr_reader :grid
-  attr_accessor :agent
+  attr_accessor :current_player
 
   def initialize(rows, cols)
     @grid = Array.new(rows) { Array.new(cols) { Cell.new } }
+    @current_player = :player
   end
 
   def height
@@ -14,25 +15,20 @@ class Board
     @grid.first.length
   end
 
-  def paint!(row, col)
-    @grid[row][col].paint!
-    agent_is_player
+  def paint!(row, col, player)
+    @grid[row][col].paint!(player)
+    @current_player = (player == :player) ? :cpu : :player
   end
 
-  def agent_is_cpu
-    @agent = :cpu
+  def player_turn?
+    @current_player == :player
   end
 
-  def agent_is_player
-    @agent = :player
-  end
-
-  def whose_turn_is_it?
-    print @agent
+  def cpu_turn?
+    @current_player == :cpu
   end
 
   def game_over?
     @grid.flatten.all?(&:painted?)
   end
-
 end

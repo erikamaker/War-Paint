@@ -6,7 +6,8 @@ class CursesRenderer
   MOVEMENT_KEYS = [Curses::Key::UP, Curses::Key::DOWN, Curses::Key::LEFT, Curses::Key::RIGHT].freeze
   PAINT_KEYS = [Curses::Key::ENTER, ' ', "\n"]
   UNPAINTED_COLOR = 1
-  PAINTED_COLOR = 2
+  PLAYER_COLOR = 2
+  CPU_COLOR = 3
   CELL_HEIGHT = 2
   CELL_WIDTH = 4
 
@@ -16,35 +17,22 @@ class CursesRenderer
     @cpu_player = Cpu.new(board)
   end
 
-  def show_game_over_screen
-    Curses.addstr("\n\nGAME OVER!\n\n")
-    Curses.refresh
-    sleep(3)
-  end
-
   def play!
     initialize_curses
 
     loop do
+      break if @quitting
+
       render
 
       if @board.game_over?
-        show_game_over_screen
-        break
+        show_game_over_screen and break
       end
 
-      key = @screen.getch
-      if key == 'q' || key == 'Q'
-
-        break
-      elsif movement?(key)
-        update_selection(key)
-      elsif painting?(key)
-        @board.paint!(@selected[0], @selected[1])
-        @board.whose_turn_is_it?
-
-        @cpu_player.cpus_turn
-        @board.whose_turn_is_it?
+      if @board.cpu_turn?
+        @cpu_player.take_turn
+      else
+        take_player_turn
       end
     end
 
@@ -57,6 +45,16 @@ class CursesRenderer
     @screen.refresh
   end
 
+  def take_player_turn
+    key = @screen.getch
+    if key == 'q' || key == 'Q'
+      quit!
+    elsif movement?(key)
+      update_selection(key)
+    elsif painting?(key)
+      @board.paint!(@selected[0], @selected[1], :player)
+    end
+  end
 
   def draw_board
     @board.grid.each_with_index do |row, row_index|
@@ -68,7 +66,14 @@ class CursesRenderer
 
   def draw_cell(cell, row, col)
     box = selected?(row, col) ? selected_box : unselected_box
-    color = cell.painted? ? PAINTED_COLOR : UNPAINTED_COLOR
+    color = case cell.painted_by
+            when :player
+              PLAYER_COLOR
+            when :cpu
+              CPU_COLOR
+            else
+              UNPAINTED_COLOR
+            end
 
     @screen.attron(Curses.color_pair(color))
     @screen.setpos(row * CELL_HEIGHT, col * CELL_WIDTH)
@@ -105,6 +110,20 @@ class CursesRenderer
     PAINT_KEYS.include? key
   end
 
+  def show_game_over_screen
+    Curses.addstr("\n\nGAME OVER!\n\n")
+    Curses.refresh
+    sleep(3)
+  end
+
+  def quit!
+    @quitting = true
+    Curses.clear
+    Curses.addstr("\n\Bye!\n\n")
+    Curses.refresh
+    sleep(1)
+  end
+
   def update_selection(key)
     case key
     when Curses::Key::UP
@@ -124,7 +143,8 @@ class CursesRenderer
     Curses.noecho
     Curses.start_color
     Curses.init_pair(UNPAINTED_COLOR, Curses::COLOR_WHITE, Curses::COLOR_BLACK)
-    Curses.init_pair(PAINTED_COLOR, Curses::COLOR_WHITE, Curses::COLOR_RED)
+    Curses.init_pair(PLAYER_COLOR, Curses::COLOR_WHITE, Curses::COLOR_RED)
+    Curses.init_pair(CPU_COLOR, Curses::COLOR_WHITE, Curses::COLOR_BLUE)
 
     @screen = Curses.stdscr
     @screen.keypad = true
